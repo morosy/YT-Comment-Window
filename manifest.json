@@ -1,0 +1,38 @@
+{
+    "manifest_version": 3,
+    "name": "YT-Comment-Window",
+    "description": "YouTube のコメント欄を右側の独立スクロール領域として表示します。",
+    "version": "0.1.0",
+    "permissions": [
+        "activeTab"
+    ],
+    "host_permissions": [
+        "https://www.youtube.com/*"
+    ],
+    "background": {
+        "service_worker": "src/background/service-worker.js"
+    },
+    "action": {
+        "default_title": "YT-Comment-Window",
+        "default_popup": "popup/popup.html"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "https://www.youtube.com/*"
+            ],
+            "js": [
+                "src/shared/constants.js",
+                "src/shared/messages.js",
+                "src/content/dom-selectors.js",
+                "src/content/youtube-layout.js",
+                "src/content/overlay-controller.js",
+                "src/content/content.js"
+            ],
+            "css": [
+                "src/content/content.css"
+            ],
+            "run_at": "document_idle"
+        }
+    ]
+}

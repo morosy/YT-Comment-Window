@@ -1,0 +1,46 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Dependencies
+node_modules/
+
+# Build / package outputs
+dist/
+build/
+out/
+coverage/
+*.map
+*.tmp
+*.temp
+
+# Env
+.env
+.env.*
+
+# Extension packaging
+*.crx
+*.pem
+*.zip
+
+# Test / cache
+.cache/
+.eslintcache
+.parcel-cache/
+
+# Mac metadata
+.AppleDouble
+.LSOverride

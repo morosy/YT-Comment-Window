@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YT-Comment-Window</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <main class="popup">
+        <h1 class="popup__title">YT-Comment-Window</h1>
+        <p class="popup__description">YouTube のコメント欄を右側のウィンドウに表示します。</p>
+        <button id="windowCommentsButton" class="popup__button" type="button">コメント欄をウィンドウ化</button>
+        <p id="statusMessage" class="popup__status" role="status" aria-live="polite"></p>
+        <p class="popup__hint">通常の YouTube watch ページで利用できます。</p>
+    </main>
+    <script src="../src/shared/constants.js"></script>
+    <script src="../src/shared/messages.js"></script>
+    <script src="popup.js"></script>
+</body>
+</html>
