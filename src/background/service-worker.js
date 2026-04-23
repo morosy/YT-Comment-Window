@@ -58,11 +58,29 @@ async function getActiveTab() {
 }
 
 /**
- * @param {Error} error
+ * @param {unknown} error
+ * @returns {string}
+ */
+function getErrorMessage(error) {
+    if (!error) {
+        return "";
+    }
+
+    if (typeof error.message === "string") {
+        return error.message;
+    }
+
+    return String(error);
+}
+
+/**
+ * @param {unknown} error
  * @returns {boolean}
  */
 function isMissingContentScriptError(error) {
-    return Boolean(error && error.message && error.message.includes("Receiving end does not exist"));
+    const message = getErrorMessage(error);
+    return message.includes("Receiving end does not exist")
+        || message.includes("Could not establish connection");
 }
 
 /**
@@ -133,6 +151,7 @@ async function startWindowModeForActiveTab() {
     } catch (error) {
         if (isMissingContentScriptError(error)) {
             try {
+                console.info("[YT-Comment-Window] content script was missing; injecting it on demand.");
                 await injectContentAssets(activeTab.id);
                 const retryResponse = await sendStartMessageToTab(activeTab);
 
@@ -150,10 +169,10 @@ async function startWindowModeForActiveTab() {
                     debugContext: {
                         tabId: activeTab.id,
                         tabUrl: activeTab.url,
-                        initialErrorName: error.name,
-                        initialErrorMessage: error.message,
-                        retryErrorName: retryError.name,
-                        retryErrorMessage: retryError.message
+                        initialErrorName: error && error.name ? error.name : null,
+                        initialErrorMessage: getErrorMessage(error),
+                        retryErrorName: retryError && retryError.name ? retryError.name : null,
+                        retryErrorMessage: getErrorMessage(retryError)
                     }
                 };
             }
@@ -167,8 +186,8 @@ async function startWindowModeForActiveTab() {
             debugContext: {
                 tabId: activeTab.id,
                 tabUrl: activeTab.url,
-                errorName: error.name,
-                errorMessage: error.message
+                errorName: error && error.name ? error.name : null,
+                errorMessage: getErrorMessage(error)
             }
         };
     }
@@ -190,8 +209,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 status: RESPONSE_STATUS.ERROR,
                 debugMessage: "Background failed while processing the popup request.",
                 debugContext: {
-                    errorName: error.name,
-                    errorMessage: error.message
+                    errorName: error && error.name ? error.name : null,
+                    errorMessage: getErrorMessage(error)
                 }
             });
         });
