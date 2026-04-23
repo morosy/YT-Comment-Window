@@ -4,7 +4,9 @@
     "description": "YouTube のコメント欄を右側の独立スクロール領域として表示します。",
     "version": "0.1.0",
     "permissions": [
-        "activeTab"
+        "activeTab",
+        "clipboardWrite",
+        "scripting"
     ],
     "host_permissions": [
         "https://www.youtube.com/*"

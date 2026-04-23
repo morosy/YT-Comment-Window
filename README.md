@@ -49,6 +49,7 @@ YT-Comment-Window/
 
 - popup と background と content script のメッセージ種別は `src/shared/messages.js` に集約しています。
 - YouTube DOM のセレクタ候補は `src/content/dom-selectors.js` に寄せています。
+- 既に開いている YouTube タブで content script が未注入の場合は、popup 実行時に background からオンデマンド注入して再試行します。
 - SPA 遷移には `yt-navigate-finish` と `MutationObserver` を併用し、動画切り替え時にウィンドウ状態を解除します。
 
 ## 手動テストと改善候補

@@ -109,14 +109,24 @@
         if (!elements.overlayHost) {
             return {
                 ok: false,
-                status: RESPONSE_STATUS.LAYOUT_NOT_FOUND
+                status: RESPONSE_STATUS.LAYOUT_NOT_FOUND,
+                debugMessage: "Overlay host was not found when moving comments.",
+                debugContext: {
+                    hasCommentsContainer: Boolean(elements.commentsContainer),
+                    url: global.location.href
+                }
             };
         }
 
         if (!elements.commentsContainer) {
             return {
                 ok: false,
-                status: RESPONSE_STATUS.COMMENTS_NOT_FOUND
+                status: RESPONSE_STATUS.COMMENTS_NOT_FOUND,
+                debugMessage: "Comments container was not found when moving comments.",
+                debugContext: {
+                    hasOverlayHost: Boolean(elements.overlayHost),
+                    url: global.location.href
+                }
             };
         }
 
@@ -145,14 +155,24 @@
         if (!youtubeLayout.isWatchPage()) {
             return {
                 ok: false,
-                status: RESPONSE_STATUS.NOT_WATCH_PAGE
+                status: RESPONSE_STATUS.NOT_WATCH_PAGE,
+                debugMessage: "Content script rejected activation because the current page is not a watch page.",
+                debugContext: {
+                    url: global.location.href
+                }
             };
         }
 
         if (!youtubeLayout.hasMinimumWidth()) {
             return {
                 ok: false,
-                status: RESPONSE_STATUS.TOO_NARROW
+                status: RESPONSE_STATUS.TOO_NARROW,
+                debugMessage: "Viewport width is below the minimum layout width.",
+                debugContext: {
+                    innerWidth: global.innerWidth,
+                    minimumWidth: constants.MIN_LAYOUT_WIDTH_PX,
+                    url: global.location.href
+                }
             };
         }
 
@@ -173,13 +193,31 @@
             if (!currentLayout.overlayHost) {
                 return {
                     ok: false,
-                    status: RESPONSE_STATUS.LAYOUT_NOT_FOUND
+                    status: RESPONSE_STATUS.LAYOUT_NOT_FOUND,
+                    debugMessage: "Timed out while waiting for the right column overlay host.",
+                    debugContext: {
+                        hasWatchRoot: Boolean(currentLayout.watchRoot),
+                        hasSecondaryColumn: Boolean(currentLayout.secondaryColumn),
+                        hasSecondaryInner: Boolean(currentLayout.secondaryInner),
+                        hasCommentsContainer: Boolean(currentLayout.commentsContainer),
+                        timeoutMs: constants.LAYOUT_WAIT_TIMEOUT_MS,
+                        url: global.location.href
+                    }
                 };
             }
 
             return {
                 ok: false,
-                status: RESPONSE_STATUS.COMMENTS_NOT_FOUND
+                status: RESPONSE_STATUS.COMMENTS_NOT_FOUND,
+                debugMessage: "Timed out while waiting for the comments container.",
+                debugContext: {
+                    hasWatchRoot: Boolean(currentLayout.watchRoot),
+                    hasSecondaryColumn: Boolean(currentLayout.secondaryColumn),
+                    hasSecondaryInner: Boolean(currentLayout.secondaryInner),
+                    hasOverlayHost: Boolean(currentLayout.overlayHost),
+                    timeoutMs: constants.LAYOUT_WAIT_TIMEOUT_MS,
+                    url: global.location.href
+                }
             };
         }
 

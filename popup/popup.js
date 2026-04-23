@@ -126,6 +126,96 @@
     }
 
     /**
+     * @param {unknown} value
+     * @returns {string}
+     */
+    function stringifyDebugValue(value) {
+        if (value === undefined) {
+            return "";
+        }
+
+        try {
+            return JSON.stringify(value, null, 4);
+        } catch (error) {
+            console.warn("[YT-Comment-Window] popup failed to stringify debug value.", error);
+            return String(value);
+        }
+    }
+
+    /**
+     * @param {{ ok?: boolean, status?: string, debugMessage?: string, debugContext?: object }|null} response
+     * @param {string} userMessage
+     * @param {Error|null} error
+     * @returns {string}
+     */
+    function buildDebugMessage(response, userMessage, error) {
+        const lines = [
+            "[YT-Comment-Window Debug Error]",
+            `time: ${new Date().toISOString()}`,
+            `userMessage: ${userMessage}`,
+            `status: ${response && response.status ? response.status : "unknown"}`,
+            `ok: ${response && typeof response.ok === "boolean" ? String(response.ok) : "unknown"}`,
+            `tabUrl: ${state.currentTab && state.currentTab.url ? state.currentTab.url : "unknown"}`,
+            `tabTitle: ${state.currentTab && state.currentTab.title ? state.currentTab.title : "unknown"}`,
+            `extensionId: ${chrome.runtime.id}`,
+            `userAgent: ${global.navigator.userAgent}`
+        ];
+
+        if (response && response.debugMessage) {
+            lines.push(`debugMessage: ${response.debugMessage}`);
+        }
+
+        if (response && response.debugContext) {
+            lines.push("debugContext:");
+            lines.push(stringifyDebugValue(response.debugContext));
+        }
+
+        if (error) {
+            lines.push(`exceptionName: ${error.name}`);
+            lines.push(`exceptionMessage: ${error.message}`);
+
+            if (error.stack) {
+                lines.push("exceptionStack:");
+                lines.push(error.stack);
+            }
+        }
+
+        return lines.join("\n");
+    }
+
+    /**
+     * @param {string} debugMessage
+     * @returns {Promise<boolean>}
+     */
+    async function copyDebugMessage(debugMessage) {
+        try {
+            await navigator.clipboard.writeText(debugMessage);
+            return true;
+        } catch (error) {
+            console.warn("[YT-Comment-Window] popup failed to copy debug message.", error);
+            return false;
+        }
+    }
+
+    /**
+     * @param {{ ok?: boolean, status?: string, debugMessage?: string, debugContext?: object }|null} response
+     * @param {string} userMessage
+     * @param {Error|null} error
+     * @returns {Promise<void>}
+     */
+    async function copyFailureDebugMessage(response, userMessage, error) {
+        const debugMessage = buildDebugMessage(response, userMessage, error);
+        const didCopy = await copyDebugMessage(debugMessage);
+
+        if (didCopy) {
+            setStatus(`${userMessage} エラー詳細をクリップボードにコピーしました。`, true);
+            return;
+        }
+
+        setStatus(`${userMessage} エラー詳細のクリップボードコピーにも失敗しました。`, true);
+    }
+
+    /**
      * @returns {Promise<void>}
      */
     async function handleWindowModeClick() {
@@ -145,9 +235,17 @@
             });
             const resolved = getStatusMessage(response && response.status);
             setStatus(resolved.message, resolved.isError);
+
+            if (resolved.isError) {
+                await copyFailureDebugMessage(response || null, resolved.message, null);
+            }
         } catch (error) {
             console.error("[YT-Comment-Window] popup failed to send start request.", error);
-            setStatus("拡張機能との通信に失敗しました。ページを再読み込みしてお試しください。", true);
+            await copyFailureDebugMessage(
+                null,
+                "拡張機能との通信に失敗しました。ページを再読み込みしてお試しください。",
+                error
+            );
         } finally {
             state.buttonElement.disabled = !state.currentTab || !isWatchUrl(state.currentTab.url);
         }

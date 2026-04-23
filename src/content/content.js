@@ -25,7 +25,11 @@
         if (!youtubeLayout.isWatchPage()) {
             return {
                 ok: false,
-                status: RESPONSE_STATUS.NOT_WATCH_PAGE
+                status: RESPONSE_STATUS.NOT_WATCH_PAGE,
+                debugMessage: "Content script received a start message outside a YouTube watch page.",
+                debugContext: {
+                    url: global.location.href
+                }
             };
         }
 
@@ -94,7 +98,13 @@
                     console.error("[YT-Comment-Window] content failed to activate window mode.", error);
                     sendResponse({
                         ok: false,
-                        status: RESPONSE_STATUS.ERROR
+                        status: RESPONSE_STATUS.ERROR,
+                        debugMessage: "Content script threw while activating window mode.",
+                        debugContext: {
+                            errorName: error.name,
+                            errorMessage: error.message,
+                            url: global.location.href
+                        }
                     });
                 });
             return true;
