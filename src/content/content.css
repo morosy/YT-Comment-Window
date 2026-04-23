@@ -1,3 +1,25 @@
+:root {
+    --ytcw-comments-background: #ffffff;
+    --ytcw-comments-foreground: #0f0f0f;
+    --ytcw-comments-muted: #606060;
+    --ytcw-comments-border: rgba(0, 0, 0, 0.12);
+    --ytcw-comments-shadow: rgba(0, 0, 0, 0.18);
+    --ytcw-close-background: rgba(0, 0, 0, 0.08);
+    --ytcw-close-background-hover: rgba(0, 0, 0, 0.14);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --ytcw-comments-background: #0f0f0f;
+        --ytcw-comments-foreground: #f1f1f1;
+        --ytcw-comments-muted: #aaaaaa;
+        --ytcw-comments-border: rgba(255, 255, 255, 0.14);
+        --ytcw-comments-shadow: rgba(0, 0, 0, 0.36);
+        --ytcw-close-background: rgba(255, 255, 255, 0.12);
+        --ytcw-close-background-hover: rgba(255, 255, 255, 0.18);
+    }
+}
+
 #ytcw-comment-window {
     width: min(100%, 100%);
     min-width: 0;
@@ -11,12 +33,11 @@
     flex-direction: column;
     width: 100%;
     min-width: 0;
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border: 1px solid var(--ytcw-comments-border);
     border-radius: 16px;
-    background:
-        linear-gradient(180deg, rgba(15, 15, 15, 0.94) 0%, rgba(32, 32, 32, 0.96) 100%);
-    color: #ffffff;
-    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.24);
+    background: var(--ytcw-comments-background);
+    color: var(--ytcw-comments-foreground);
+    box-shadow: 0 18px 40px var(--ytcw-comments-shadow);
     overflow: hidden;
 }
 
@@ -26,7 +47,8 @@
     justify-content: space-between;
     gap: 12px;
     padding: 12px 16px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid var(--ytcw-comments-border);
+    background: var(--ytcw-comments-background);
 }
 
 .ytcw-overlay__title {
@@ -40,7 +62,7 @@
     padding: 8px 12px;
     border: none;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.12);
+    background: var(--ytcw-close-background);
     color: inherit;
     font-size: 12px;
     font-weight: 700;
@@ -48,7 +70,7 @@
 }
 
 .ytcw-overlay__close:hover {
-    background: rgba(255, 255, 255, 0.18);
+    background: var(--ytcw-close-background-hover);
 }
 
 .ytcw-overlay__body {
@@ -57,12 +79,20 @@
     padding: 0;
     overflow: auto;
     overscroll-behavior: contain;
-    background: rgba(15, 15, 15, 0.18);
+    background: var(--ytcw-comments-background);
 }
 
 .ytcw-overlay__body [data-ytcw-relocated="true"] {
+    --yt-spec-base-background: var(--ytcw-comments-background);
+    --yt-spec-raised-background: var(--ytcw-comments-background);
+    --yt-spec-menu-background: var(--ytcw-comments-background);
+    --yt-spec-text-primary: var(--ytcw-comments-foreground);
+    --yt-spec-text-secondary: var(--ytcw-comments-muted);
+
     width: 100%;
     margin: 0;
+    background: var(--ytcw-comments-background) !important;
+    color: var(--ytcw-comments-foreground);
 }
 
 .ytcw-overlay__body [data-ytcw-relocated="true"] #sections,
@@ -73,6 +103,16 @@
 .ytcw-overlay__body ytd-comments,
 .ytcw-overlay__body #comments {
     margin-top: 0 !important;
+    background: var(--ytcw-comments-background) !important;
+    color: var(--ytcw-comments-foreground);
+}
+
+.ytcw-overlay__body ytd-comment-thread-renderer,
+.ytcw-overlay__body ytd-comment-view-model,
+.ytcw-overlay__body ytd-comments-header-renderer,
+.ytcw-overlay__body #sections,
+.ytcw-overlay__body #contents {
+    background: var(--ytcw-comments-background) !important;
 }
 
 html.ytcw-window-mode-active #secondary-inner,
