@@ -219,6 +219,8 @@
      * @returns {Promise<void>}
      */
     async function handleWindowModeClick() {
+        let shouldClosePopup = false;
+
         try {
             const activeTab = await getActiveTab();
             updateButtonState(activeTab, false);
@@ -227,6 +229,7 @@
                 return;
             }
 
+            shouldClosePopup = true;
             state.buttonElement.disabled = true;
             setStatus("YouTube ページへ開始命令を送っています...", false);
 
@@ -248,6 +251,10 @@
             );
         } finally {
             state.buttonElement.disabled = !state.currentTab || !isWatchUrl(state.currentTab.url);
+
+            if (shouldClosePopup) {
+                global.close();
+            }
         }
     }
 
