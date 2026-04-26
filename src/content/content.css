@@ -21,14 +21,17 @@
 }
 
 #ytcw-comment-window {
-    width: min(100%, 100%);
+    box-sizing: border-box;
+    width: min(100%, var(--ytcw-window-width, 400px));
+    max-width: calc(100vw - 24px);
     min-width: 0;
-    margin: 0 0 16px;
+    margin: 0 auto 16px;
 }
 
 .ytcw-overlay {
     position: sticky;
     top: 72px;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -46,7 +49,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    padding: 12px 16px;
+    padding: 12px var(--ytcw-window-side-padding, 14px);
     border-bottom: 1px solid var(--ytcw-comments-border);
     background: var(--ytcw-comments-background);
 }
@@ -74,9 +77,10 @@
 }
 
 .ytcw-overlay__body {
+    box-sizing: border-box;
     min-height: 280px;
     max-height: calc(100vh - 150px);
-    padding: 0;
+    padding: 0 var(--ytcw-window-side-padding, 14px) 16px;
     overflow: auto;
     overscroll-behavior: contain;
     background: var(--ytcw-comments-background);
@@ -91,6 +95,7 @@
 
     width: 100%;
     margin: 0;
+    box-sizing: border-box;
     background: var(--ytcw-comments-background) !important;
     color: var(--ytcw-comments-foreground);
 }
@@ -121,7 +126,19 @@ html.ytcw-window-mode-active #secondary {
 }
 
 @media (max-width: 1279px) {
+    #ytcw-comment-window {
+        max-width: calc(100vw - 16px);
+    }
+
     .ytcw-overlay__body {
+        padding-right: 10px;
+        padding-bottom: 14px;
+        padding-left: 10px;
         max-height: calc(100vh - 180px);
+    }
+
+    .ytcw-overlay__header {
+        padding-right: 10px;
+        padding-left: 10px;
     }
 }

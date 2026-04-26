@@ -39,6 +39,8 @@
         const root = document.createElement("section");
         root.id = constants.OVERLAY_ID;
         root.className = constants.CSS_ROOT_CLASS;
+        root.style.setProperty("--ytcw-window-width", `${constants.WINDOW_WIDTH_PX}px`);
+        root.style.setProperty("--ytcw-window-side-padding", `${constants.WINDOW_SIDE_PADDING_PX}px`);
 
         const header = document.createElement("header");
         header.className = "ytcw-overlay__header";
