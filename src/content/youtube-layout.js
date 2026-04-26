@@ -66,12 +66,39 @@
     }
 
     /**
+     * @param {Element|null} element
+     * @param {Element|null} ancestor
+     * @returns {Element|null}
+     */
+    function getDirectChildAncestor(element, ancestor) {
+        if (!element || !ancestor) {
+            return null;
+        }
+
+        let current = element;
+
+        while (current && current.parentElement && current.parentElement !== ancestor) {
+            current = current.parentElement;
+        }
+
+        if (current && current.parentElement === ancestor) {
+            return current;
+        }
+
+        return null;
+    }
+
+    /**
      * @returns {{
      *     watchRoot: Element|null,
      *     secondaryColumn: Element|null,
      *     secondaryInner: Element|null,
-     *     overlayHost: Element|null,
-     *     commentsContainer: Element|null
+      *     overlayHost: Element|null,
+     *     commentsContainer: Element|null,
+     *     secondaryChipBar: Element|null,
+     *     secondaryChipContainer: Element|null,
+     *     secondaryChipHostChild: Element|null,
+     *     secondaryChipBarHostChild: Element|null
      * }}
      */
     function getLayoutElements() {
@@ -80,24 +107,36 @@
         const secondaryColumn = findFirst(domSelectors.SECONDARY_COLUMN || [], searchRoot);
         const secondaryInner = findFirst(domSelectors.SECONDARY_INNER || [], searchRoot);
         const commentsContainer = findFirst(domSelectors.COMMENTS_CONTAINER || [], searchRoot);
+        const secondaryChipBar = findFirst(domSelectors.SECONDARY_CHIP_BAR || [], searchRoot);
+        const secondaryChipContainer = findFirst(domSelectors.SECONDARY_CHIP_CONTAINER || [], searchRoot);
+        const secondaryChipHostChild = getDirectChildAncestor(secondaryChipBar || secondaryChipContainer, secondaryInner);
+        const secondaryChipBarHostChild = getDirectChildAncestor(
+            secondaryChipBar || secondaryChipContainer,
+            secondaryChipHostChild || secondaryInner
+        );
 
         return {
             watchRoot,
             secondaryColumn,
             secondaryInner,
             overlayHost: secondaryInner || secondaryColumn,
-            commentsContainer
+            commentsContainer,
+            secondaryChipBar,
+            secondaryChipContainer,
+            secondaryChipHostChild,
+            secondaryChipBarHostChild
         };
     }
 
     /**
-     * @param {{ timeoutMs?: number }} options
+     * @param {{ timeoutMs?: number, requireChipContainer?: boolean }} options
      * @returns {Promise<ReturnType<typeof getLayoutElements> | null>}
      */
     function waitForLayoutElements(options) {
         const timeoutMs = options && options.timeoutMs
             ? options.timeoutMs
             : constants.LAYOUT_WAIT_TIMEOUT_MS;
+        const requireChipContainer = Boolean(options && options.requireChipContainer);
 
         return new Promise((resolve) => {
             let completed = false;
@@ -133,7 +172,9 @@
             function inspect() {
                 const elements = getLayoutElements();
 
-                if (elements.overlayHost && elements.commentsContainer) {
+                if (elements.overlayHost
+                    && elements.commentsContainer
+                    && (!requireChipContainer || elements.secondaryChipContainer)) {
                     finish(elements);
                 }
             }
@@ -168,6 +209,7 @@
         getCurrentVideoId,
         getLayoutElements,
         waitForLayoutElements,
-        hasMinimumWidth
+        hasMinimumWidth,
+        getDirectChildAncestor
     };
 }(globalThis));

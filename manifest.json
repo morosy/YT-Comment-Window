@@ -28,6 +28,7 @@
                 "src/shared/messages.js",
                 "src/content/dom-selectors.js",
                 "src/content/youtube-layout.js",
+                "src/content/layout-mode-controller.js",
                 "src/content/overlay-controller.js",
                 "src/content/content.js"
             ],

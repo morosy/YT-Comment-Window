@@ -6,6 +6,7 @@
     const messages = namespace.messages || {};
     const RESPONSE_STATUS = messages.RESPONSE_STATUS || {};
     const youtubeLayout = namespace.youtubeLayout || {};
+    const layoutModeController = namespace.layoutModeController || {};
 
     const state = {
         isWindowMode: false,
@@ -154,6 +155,10 @@
      * @returns {Promise<{ ok: boolean, status: string }>}
      */
     async function startWindowMode() {
+        if (layoutModeController.deactivateCommentsMode) {
+            layoutModeController.deactivateCommentsMode();
+        }
+
         if (!youtubeLayout.isWatchPage()) {
             return {
                 ok: false,

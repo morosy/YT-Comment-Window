@@ -120,6 +120,59 @@
     background: var(--ytcw-comments-background) !important;
 }
 
+.ytcw-layout-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 64px;
+    height: 32px;
+    padding: 0 12px;
+    border: 1px solid var(--ytcw-comments-border);
+    border-radius: 8px;
+    background: var(--ytcw-comments-background);
+    color: var(--ytcw-comments-foreground);
+    font: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.ytcw-layout-chip.is-active {
+    background: var(--ytcw-comments-foreground);
+    color: var(--ytcw-comments-background);
+}
+
+.ytcw-layout-panel {
+    display: block;
+    width: 100%;
+    margin-top: 12px;
+}
+
+.ytcw-layout-panel [data-ytcw-layout-relocated="true"] {
+    display: block !important;
+    width: 100%;
+    margin: 0;
+    background: var(--ytcw-comments-background) !important;
+    color: var(--ytcw-comments-foreground);
+}
+
+.ytcw-layout-panel [data-ytcw-layout-relocated="true"] #sections,
+.ytcw-layout-panel [data-ytcw-layout-relocated="true"] #contents,
+.ytcw-layout-panel ytd-comments,
+.ytcw-layout-panel #comments,
+.ytcw-layout-panel ytd-comment-thread-renderer,
+.ytcw-layout-panel ytd-comment-view-model,
+.ytcw-layout-panel ytd-comments-header-renderer {
+    display: block !important;
+    width: 100%;
+    background: var(--ytcw-comments-background) !important;
+}
+
+.ytcw-secondary-hidden {
+    display: none !important;
+}
+
 html.ytcw-window-mode-active #secondary-inner,
 html.ytcw-window-mode-active #secondary {
     display: block;

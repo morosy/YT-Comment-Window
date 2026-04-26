@@ -5,6 +5,7 @@
     const constants = namespace.constants || {};
     const messages = namespace.messages || {};
     const youtubeLayout = namespace.youtubeLayout || {};
+    const layoutModeController = namespace.layoutModeController || {};
     const overlayController = namespace.overlayController || {};
     const MESSAGE_TYPES = messages.MESSAGE_TYPES || {};
     const RESPONSE_STATUS = messages.RESPONSE_STATUS || {};
@@ -17,6 +18,16 @@
 
     let lastKnownUrl = global.location.href;
     let navigationTimerId = 0;
+
+    function syncAutomaticLayout() {
+        if (!layoutModeController.syncToCurrentPage) {
+            return;
+        }
+
+        layoutModeController.syncToCurrentPage().catch((error) => {
+            console.error("[YT-Comment-Window] content failed to sync automatic comment layout.", error);
+        });
+    }
 
     /**
      * @returns {Promise<{ ok: boolean, status: string }>}
@@ -51,6 +62,7 @@
 
         lastKnownUrl = global.location.href;
         overlayController.handleNavigationChange();
+        syncAutomaticLayout();
     }
 
     function scheduleNavigationCheck() {
@@ -119,4 +131,5 @@
     });
 
     installSpaGuards();
+    syncAutomaticLayout();
 }(globalThis));
