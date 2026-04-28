@@ -145,8 +145,13 @@
 
 .ytcw-layout-panel {
     display: block;
+    position: relative;
+    z-index: 1;
     width: 100%;
     margin-top: 12px;
+    padding: 0 0 16px;
+    background: var(--ytcw-comments-background) !important;
+    isolation: isolate;
 }
 
 .ytcw-layout-panel [data-ytcw-layout-relocated="true"] {
@@ -159,11 +164,15 @@
 
 .ytcw-layout-panel [data-ytcw-layout-relocated="true"] #sections,
 .ytcw-layout-panel [data-ytcw-layout-relocated="true"] #contents,
+.ytcw-layout-panel [data-ytcw-layout-relocated="true"] #continuations,
+.ytcw-layout-panel [data-ytcw-layout-relocated="true"] #header,
+.ytcw-layout-panel [data-ytcw-layout-relocated="true"] #body,
 .ytcw-layout-panel ytd-comments,
 .ytcw-layout-panel #comments,
 .ytcw-layout-panel ytd-comment-thread-renderer,
 .ytcw-layout-panel ytd-comment-view-model,
-.ytcw-layout-panel ytd-comments-header-renderer {
+.ytcw-layout-panel ytd-comments-header-renderer,
+.ytcw-layout-panel ytd-item-section-renderer {
     display: block !important;
     width: 100%;
     background: var(--ytcw-comments-background) !important;
